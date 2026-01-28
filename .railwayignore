@@ -1,0 +1,56 @@
+# Railway Ignore File
+# Files and directories to ignore during Railway deployment
+
+# Local uploads folder (use Railway Volume instead)
+uploads/
+
+# Node modules (will be installed during build)
+node_modules/
+frontend/node_modules/
+
+# Build outputs (will be generated during build)
+backend/target/
+frontend/dist/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+backend.log
+frontend.log
+start.log
+backend-test.log
+
+# PID files
+*.pid
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+*.test.js
+*.spec.js
+
+# Documentation (optional - remove if you want docs in production)
+*.md
+!README.md
+
+# Scripts (optional - usually not needed in production)
+*.sh
+!start-all.sh
+!stop-all.sh
+
+# SQL backup files
+*.sql
+
+# Environment files (use Railway Variables instead)
+.env
+.env.*

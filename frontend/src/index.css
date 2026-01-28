@@ -1,0 +1,312 @@
+/* ============================================
+   Font Definitions (Local - No CDN)
+   ============================================ */
+
+/* Pretendard Variable (Fallback) */
+@font-face {
+  font-family: 'Pretendard Variable';
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: local('Pretendard Variable'), url('/fonts/PretendardVariable.woff2') format('woff2-variations');
+}
+
+/* Spoqa Han Sans Neo (Primary) */
+@font-face {
+  font-family: 'Spoqa Han Sans Neo';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: local('Spoqa Han Sans Neo Regular'), url('/fonts/SpoqaHanSansNeo-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Spoqa Han Sans Neo';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: local('Spoqa Han Sans Neo Medium'), url('/fonts/SpoqaHanSansNeo-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Spoqa Han Sans Neo';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: local('Spoqa Han Sans Neo Bold'), url('/fonts/SpoqaHanSansNeo-Bold.woff2') format('woff2');
+}
+
+/* Hammersmith One (Logo Font) */
+@font-face {
+  font-family: 'Hammersmith One';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: local('Hammersmith One'), url('/fonts/HammersmithOne-Regular.woff2') format('woff2');
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Codeit Sprint Instructor Onboarding Portal Design System */
+/* Figma Design Tokens from MCP Server */
+
+@layer base {
+  :root {
+    /* Codeit Brand Colors */
+    --background: 0 0% 98%;
+    --foreground: 240 10% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 10%;
+
+    /* Codeit Purple - #5E5CE6 = hsl(241, 76%, 63%) */
+    --primary: 241 76% 63%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 10% 10%;
+
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+
+    --accent: 241 76% 95%;
+    --accent-foreground: 241 76% 50%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 241 76% 63%;
+
+    --radius: 0.75rem;
+
+    /* Status Colors */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
+    /* Step Status */
+    --step-pending: 240 5% 84%;
+    --step-in-progress: 241 76% 63%;
+    --step-completed: 142 71% 45%;
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 10% 10%;
+    --sidebar-primary: 241 76% 63%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 241 76% 95%;
+    --sidebar-accent-foreground: 241 76% 50%;
+    --sidebar-border: 240 6% 90%;
+    --sidebar-ring: 241 76% 63%;
+
+    /* ============================================
+       Figma Design System Variables (정확한 HEX 값에서 추출)
+       Source: frontend/src/design-system/figma-colors.ts
+       ============================================ */
+
+    /* Purple Color Scale (Primary Brand Color) */
+    /* purple-100: #54009E = hsl(272, 100%, 31%) - Figma 정확한 값 ✅ */
+    --figma-purple-100: 272 100% 31%;
+    /* purple-90: #6500C2 = hsl(271, 100%, 38%) - Figma 정확한 값 ✅ */
+    --figma-purple-90: 271 100% 38%;
+    /* purple-80: #760DDE */
+    --figma-purple-80: 270 89% 46%;
+    /* purple-70: #8F00FF */
+    --figma-purple-70: 274 100% 50%;
+    /* purple-60: #9933FF */
+    --figma-purple-60: 270 100% 60%;
+    /* purple-50: #A64EFF = hsl(270, 100%, 65%) - PRIMARY PURPLE - Figma 정확한 값 ✅ */
+    --figma-purple-50: 270 100% 65%;
+    /* purple-40: #B363FD */
+    --figma-purple-40: 271 97% 69%;
+    /* purple-30: #C47CFD = hsl(273, 97%, 74%) */
+    --figma-purple-30: 273 97% 74%;
+    /* purple-20: #CD96F8 */
+    --figma-purple-20: 274 88% 78%;
+    /* purple-15: #D4A4F9 */
+    --figma-purple-15: 274 88% 81%;
+    /* purple-10: #E9CCFF */
+    --figma-purple-10: 274 100% 90%;
+    /* purple-05: #F8F5FF = hsl(267, 100%, 99%) */
+    --figma-purple-05: 278 100% 96%; /* #F8ECFF - Figma 정확한 값 */
+    /* purple-00: #FBF5FF */
+    --figma-purple-00: 276 100% 98%;
+
+    /* Gray Color Scale */
+    /* gray-100: #333236 */
+    --figma-gray-100: 255 4% 20%;
+    /* gray-90: #4A494F */
+    --figma-gray-90: 250 4% 30%;
+    /* gray-80: #66666E */
+    --figma-gray-80: 240 4% 42%;
+    /* gray-70: #888893 */
+    --figma-gray-70: 240 5% 55%;
+    /* gray-60: #ADAEB8 */
+    --figma-gray-60: 235 7% 70%;
+    /* gray-50: #C2C3CD */
+    --figma-gray-50: 235 10% 78%;
+    /* gray-40: #D5D6DD */
+    --figma-gray-40: 233 11% 85%;
+    /* gray-30: #DDDEE4 */
+    --figma-gray-30: 231 11% 88%;
+    /* gray-20: #E5E5EA */
+    --figma-gray-20: 240 11% 91%;
+    /* gray-15: #EDEDF0 */
+    --figma-gray-15: 240 9% 94%;
+    /* gray-10: #F6F6F8 */
+    --figma-gray-10: 240 12% 97%;
+    /* gray-05: #FBFBFB = hsl(0, 0%, 98%) */
+    --figma-gray-05: 0 0% 98%;
+    /* gray-00: #FFFFFF = hsl(0, 0%, 100%) */
+    --figma-gray-00: 0 0% 100%;
+
+    /* Green Color Scale (Success States) */
+    /* green-70: #0F773E = hsl(145, 78%, 27%) */
+    --figma-green-70: 145 78% 27%;
+    /* green-60: #16C44B = hsl(136, 77%, 43%) */
+    --figma-green-60: 136 77% 43%;
+    /* green-00: #E8F9EE = hsl(138, 56%, 94%) */
+    --figma-green-00: 138 56% 94%;
+
+    /* Red Color Scale (Error States) - 새로 추가 */
+    /* red-70: #E6172B = hsl(352, 84%, 50%) */
+    --figma-red-70: 352 84% 50%;
+    /* red-60: #FF4C5E = hsl(351, 100%, 65%) */
+    --figma-red-60: 351 100% 65%;
+
+    /* Blue Color Scale (Info States) */
+    /* blue-50: #0099FF = hsl(200, 100%, 50%) */
+    --figma-blue-50: 200 100% 50%;
+    /* blue-00: #E5F4FF = hsl(203, 100%, 95%) */
+    --figma-blue-00: 203 100% 95%;
+
+    /* Semantic Colors */
+    /* txt-purple-secondary: #9933FF = hsl(273, 100%, 60%) */
+    --figma-txt-purple-secondary: 273 100% 60%;
+    /* bg-purple-primary: #F8ECFF = hsl(273, 100%, 97%) */
+    --figma-bg-purple-primary: 273 100% 97%;
+    /* bg-purple-primary-invert: #A64EFF = hsl(273, 100%, 65%) */
+    --figma-bg-purple-primary-invert: 273 100% 65%;
+
+    /* Transparency */
+    /* gray-100-opacity-05: rgba(51, 50, 54, 0.05) */
+    --figma-gray-100-opacity-05: 240 2% 20% / 0.05;
+
+    /* Spacing (from Figma) */
+    --figma-spacing-4: 4px;
+    --figma-spacing-md: 8px;
+    --figma-spacing-lg: 12px;
+
+    /* Border Radius (from Figma) */
+    --figma-radius-32: 32px;
+    --figma-radius-full: 9999px;
+  }
+
+  .dark {
+    --background: 240 10% 6%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 10%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 10%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 241 76% 68%;
+    --primary-foreground: 240 10% 6%;
+
+    --secondary: 240 5% 18%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 5% 18%;
+    --muted-foreground: 240 4% 65%;
+
+    --accent: 241 76% 20%;
+    --accent-foreground: 241 76% 75%;
+
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 5% 20%;
+    --input: 240 5% 20%;
+    --ring: 241 76% 68%;
+
+    /* Status Colors - Dark */
+    --success: 142 71% 40%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 45%;
+    --warning-foreground: 0 0% 100%;
+    --info: 199 89% 45%;
+    --info-foreground: 0 0% 100%;
+
+    /* Step Status - Dark */
+    --step-pending: 240 5% 30%;
+    --step-in-progress: 241 76% 68%;
+    --step-completed: 142 71% 40%;
+
+    /* Sidebar - Dark */
+    --sidebar-background: 240 10% 8%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 241 76% 68%;
+    --sidebar-primary-foreground: 240 10% 6%;
+    --sidebar-accent: 241 76% 20%;
+    --sidebar-accent-foreground: 241 76% 75%;
+    --sidebar-border: 240 5% 20%;
+    --sidebar-ring: 241 76% 68%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    /* Figma Design: Spoqa Han Sans Neo (fallback to Pretendard) */
+    font-family: 'Spoqa Han Sans Neo', 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-accent-foreground bg-clip-text text-transparent;
+  }
+
+  .glass-effect {
+    @apply bg-card/80 backdrop-blur-lg;
+  }
+
+  /* Figma Design System Utility Classes */
+  .figma-purple-100 {
+    color: hsl(var(--figma-purple-100));
+  }
+  .figma-purple-90 {
+    color: hsl(var(--figma-purple-90));
+  }
+  .figma-purple-50 {
+    color: hsl(var(--figma-purple-50));
+  }
+  .figma-gray-100 {
+    color: hsl(var(--figma-gray-100));
+  }
+  .figma-gray-70 {
+    color: hsl(var(--figma-gray-70));
+  }
+  .figma-gray-60 {
+    color: hsl(var(--figma-gray-60));
+  }
+}

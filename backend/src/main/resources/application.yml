@@ -1,0 +1,101 @@
+spring:
+  application:
+    name: codeit-onboarding-backend
+
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/onboarding_db}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  sql:
+    init:
+      mode: never
+      continue-on-error: false
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    open-in-view: false
+    defer-datasource-initialization: true
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 200MB
+      max-request-size: 200MB
+      file-size-threshold: 2KB
+
+  # 이메일 발송 설정 (SMTP)
+  # 로컬 테스트: MailHog 사용 시 host: localhost, port: 1025, auth: false
+  # 실제 이메일: Gmail SMTP 사용 시 host: smtp.gmail.com, port: 587, auth: true
+  mail:
+    host: ${MAIL_HOST:localhost} # MailHog: localhost, Gmail: smtp.gmail.com
+    port: ${MAIL_PORT:1025} # MailHog: 1025, Gmail: 587
+    username: ${MAIL_USERNAME:} # Gmail 사용 시 필요
+    password: ${MAIL_PASSWORD:} # Gmail 사용 시 필요
+    properties:
+      mail:
+        smtp:
+          auth: ${MAIL_AUTH:false} # MailHog: false, Gmail: true
+          starttls:
+            enable: ${MAIL_STARTTLS:false} # MailHog: false, Gmail: true
+          connectiontimeout: 30000  # Increased for better reliability with external SMTP
+          timeout: 30000
+          writetimeout: 30000
+
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: /api
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:codeit-onboarding-secret-key-change-this-in-production-minimum-256-bits}
+    expiration: ${JWT_EXPIRATION:86400000} # 24 hours in milliseconds
+
+  file:
+    # File upload directory configuration
+    # Local development: ./uploads (relative to application root)
+    # Railway with volume: /data/uploads (mount volume at /data)
+    # Set UPLOAD_DIR environment variable to override
+    upload-dir: ${UPLOAD_DIR:./uploads}
+    max-size: 209715200 # 200MB in bytes
+
+  # AWS S3 Configuration (optional - for video storage)
+  # Set AWS_S3_ENABLED=true to use S3, false to use local storage
+  s3:
+    enabled: ${AWS_S3_ENABLED:false}
+    bucket-name: ${AWS_S3_BUCKET_NAME:}
+    region: ${AWS_S3_REGION:ap-northeast-2}
+    access-key: ${AWS_S3_ACCESS_KEY:}
+    secret-key: ${AWS_S3_SECRET_KEY:}
+    # Base URL for S3 objects (e.g., https://bucket-name.s3.region.amazonaws.com)
+    # If not set, will be auto-generated from bucket-name and region
+    base-url: ${AWS_S3_BASE_URL:}
+
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:3000,http://localhost:8081}
+    allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+    allowed-headers: ${CORS_ALLOWED_HEADERS:Authorization,Content-Type,Accept,X-Requested-With}
+    allow-credentials: true
+
+  email:
+    from: ${EMAIL_FROM:${EMAIL_DOMAIN:noreply@codeit.com}}
+    from-name: ${EMAIL_FROM_NAME:코드잇}
+    domain: ${EMAIL_DOMAIN:@codeit.com}  # Allowed email domain for registration
+    brevo-api-key: ${BREVO_API_KEY:}  # Brevo REST API Key (설정 시 REST API 사용, 미설정 시 SMTP 사용)
+    brevo-api-url: ${BREVO_API_URL:https://api.brevo.com/v3/smtp/email}  # Brevo API endpoint
+    verification-url: ${EMAIL_VERIFICATION_URL:http://localhost:5173/auth/verify-email}
+    password-reset-url: ${EMAIL_PASSWORD_RESET_URL:http://localhost:5173/auth/reset-password}
+
+logging:
+  level:
+    kr.codeit.onboarding: ${LOG_LEVEL:INFO}
+    org.hibernate.SQL: ${HIBERNATE_SQL_LOG:false}
+    org.hibernate.orm.jdbc.bind: ${HIBERNATE_BIND_LOG:false}

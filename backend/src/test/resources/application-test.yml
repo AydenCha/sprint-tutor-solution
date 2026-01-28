@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  h2:
+    console:
+      enabled: false
+
+  sql:
+    init:
+      mode: never  # Disable data.sql for tests
+
+  flyway:
+    enabled: false  # Disable Flyway migrations in tests (H2 doesn't support JSONB)
+
+  # Mail configuration is intentionally omitted in tests
+  # This prevents Spring from creating JavaMailSender bean
+  # EmailService handles null mailSender gracefully (see @Autowired(required = false))
+
+app:
+  jwt:
+    secret: test-secret-key-for-testing-purpose-minimum-256-bits-required-here
+    expiration: 86400000
+
+  file:
+    upload-dir: ./test-uploads
+
+  email:
+    # Disable Brevo API in tests
+    brevo-api-key: ""
+
+logging:
+  level:
+    kr.codeit.onboarding: DEBUG

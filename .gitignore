@@ -1,0 +1,73 @@
+# Logs
+*.log
+*.pid
+backend.log
+frontend.log
+start.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+backend/target/
+frontend/dist/
+frontend/node_modules/
+frontend/.next/
+
+# Uploads
+backend/uploads/
+backend/test-uploads/
+frontend/uploads/
+
+# Test coverage reports
+backend/target/site/jacoco/
+
+# Temporary files
+/tmp/
+*.tmp
+
+# Database dumps
+*.sql.backup
+*.dump
+
+# Local test files
+test_audit_log.sh
+test-pm-flow.sh
+qa-test.sh
+e2e-test.sh
+
+# PID files
+*.pid
+
+# Local configuration overrides
+application-local.yml
+backend/src/main/resources/application-local.yml
+
+# Bun lock file (use npm)
+bun.lockb
+
+# Claude AI settings
+.claude/
+
+
+# 더미 데이터 생성 스크립트 (민감 정보 포함)
+backend/SEED_DATA.sh
+backend/SEED_DATA.sh.bak
+
+backend/LOCAL_DB_SETUP.sql
+backend/POSTGRESQL_MIGRATION.sql
+backend/SYNC_LOCAL_TO_PRODUCTION.sql

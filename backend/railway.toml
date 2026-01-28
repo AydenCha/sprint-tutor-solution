@@ -1,0 +1,21 @@
+[build]
+builder = "DOCKERFILE"
+# Use Dockerfile for consistent builds
+
+[deploy]
+# Aggressive memory-optimized JVM options for Railway
+# -Xmx384m: Maximum heap size 384MB (reduced)
+# -Xms192m: Initial heap size 192MB (reduced)
+# -XX:MaxMetaspaceSize=96m: Limit metaspace to 96MB (reduced)
+# -XX:+UseG1GC: Use G1 garbage collector (better for low memory)
+# -XX:MaxGCPauseMillis=200: Target max GC pause time
+# -XX:+UseContainerSupport: Respect container memory limits
+# -XX:MaxRAMPercentage=70.0: Use max 70% of container memory (reduced)
+# -XX:+ExitOnOutOfMemoryError: Exit immediately on OOM
+# -Dspring.jmx.enabled=false: Disable JMX to save memory
+# -Dspring.backgroundpreinitializer.ignore=true: Skip background pre-initialization
+startCommand = "java -Xmx384m -Xms192m -XX:MaxMetaspaceSize=96m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseContainerSupport -XX:MaxRAMPercentage=70.0 -XX:+ExitOnOutOfMemoryError -Dspring.profiles.active=prod -Dspring.jmx.enabled=false -Dspring.backgroundpreinitializer.ignore=true -jar app.jar"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 600
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

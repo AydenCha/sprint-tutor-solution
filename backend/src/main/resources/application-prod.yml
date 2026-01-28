@@ -1,0 +1,125 @@
+spring:
+  # Memory optimization: Disable JMX
+  jmx:
+    enabled: false
+  
+  # Memory optimization: Disable background pre-initialization
+  backgroundpreinitializer:
+    ignore: true
+  
+  datasource:
+    # Railway provides DATABASE_URL in format: postgresql://user:password@host:port/dbname
+    # DatabaseConfig will convert it to JDBC format if needed
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/onboarding_db}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    # Aggressive memory optimization: Further reduce connection pool size
+    hikari:
+      maximum-pool-size: 3  # Reduced from 5 to 3 for lower memory usage
+      minimum-idle: 1       # Reduced from 2 to 1
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        # Aggressive memory optimization: Further reduce connection pool size
+        connection:
+          pool_size: 3  # Reduced from 5 to 3 for lower memory usage
+        # Disable second-level cache to save memory
+        cache:
+          use_second_level_cache: false
+          use_query_cache: false
+          provider_class: org.hibernate.cache.internal.NoCachingRegionFactory  # Complete cache disable
+        # Optimize batch processing (reduced for memory)
+        jdbc:
+          batch_size: 10  # Reduced from 20 to 10 for lower memory usage
+        order_inserts: true
+        order_updates: true
+        # Memory optimization: Disable statement caching
+        statement_cache:
+          size: 0  # Disable statement caching to save memory
+    open-in-view: false
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 200MB
+      max-request-size: 200MB
+      # Memory optimization: Use disk for file uploads instead of memory
+      file-size-threshold: 1MB  # Files larger than 1MB will be written to disk
+
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: /api
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-this-in-production}
+    expiration: ${JWT_EXPIRATION:86400000}
+
+  file:
+    upload-dir: ${UPLOAD_DIR:/app/data/uploads}
+    max-size: 209715200
+
+  s3:
+    enabled: ${AWS_S3_ENABLED:false}
+    bucket-name: ${AWS_S3_BUCKET_NAME:}
+    region: ${AWS_S3_REGION:ap-northeast-2}  # Default: Seoul region, override with AWS_S3_REGION
+    access-key: ${AWS_S3_ACCESS_KEY:}
+    secret-key: ${AWS_S3_SECRET_KEY:}
+    base-url: ${AWS_S3_BASE_URL:}
+
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    auth: ${MAIL_AUTH:true}
+    starttls: ${MAIL_STARTTLS:true}
+    properties:
+      mail:
+        smtp:
+          auth: ${MAIL_AUTH:true}
+          starttls:
+            enable: ${MAIL_STARTTLS:true}
+          connectiontimeout: 30000  # Increased from 5000 to 30000 for better reliability
+          timeout: 30000  # Increased from 5000 to 30000
+          writetimeout: 30000  # Increased from 5000 to 30000
+
+  email:
+    from: ${EMAIL_FROM:${EMAIL_DOMAIN:noreply@codeit.com}}
+    from-name: ${EMAIL_FROM_NAME:코드잇}
+    domain: ${EMAIL_DOMAIN:@codeit.com}  # Allowed email domain for registration
+    brevo-api-key: ${BREVO_API_KEY:}  # Brevo REST API Key (설정 시 REST API 사용, 미설정 시 SMTP 사용)
+    brevo-api-url: ${BREVO_API_URL:https://api.brevo.com/v3/smtp/email}  # Brevo API endpoint
+    # Email URLs are automatically constructed by EmailUrlConfig Bean:
+    # 1. If EMAIL_VERIFICATION_URL/EMAIL_PASSWORD_RESET_URL are set, use them directly
+    # 2. If FRONTEND_URL is set, construct URLs as FRONTEND_URL + /auth/verify-email or /auth/reset-password
+    # 3. Otherwise, use first origin from CORS_ALLOWED_ORIGINS + /auth/verify-email or /auth/reset-password
+    # These properties are not used directly, but kept for backward compatibility
+    verification-url: ${EMAIL_VERIFICATION_URL:}
+    password-reset-url: ${EMAIL_PASSWORD_RESET_URL:}
+
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://sprint-tutor-solution.up.railway.app}
+    allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PUT,DELETE,OPTIONS,PATCH}
+    allowed-headers: ${CORS_ALLOWED_HEADERS:*}
+    allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
+
+logging:
+  level:
+    root: WARN  # Reduce logging to save memory
+    kr.codeit.onboarding: INFO
+    org.springframework.web: WARN
+    org.springframework.boot: WARN
+    org.hibernate: WARN  # Reduce Hibernate logging
+    org.springframework.security: WARN

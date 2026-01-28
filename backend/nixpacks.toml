@@ -1,0 +1,15 @@
+# Nixpacks configuration for Railway
+[phases.setup]
+nixPkgs = ["maven", "jdk17"]
+
+[phases.install]
+cmds = [
+  "mvn dependency:go-offline -B || true",
+  "mvn clean package -DskipTests -B"
+]
+
+[phases.build]
+cmds = ["echo 'Build completed'"]
+
+[start]
+cmd = "java -jar target/onboarding-backend-1.0.0.jar"

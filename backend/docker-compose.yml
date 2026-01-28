@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: onboarding-postgres
+    environment:
+      POSTGRES_DB: onboarding_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - onboarding-network
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: onboarding-mailhog
+    ports:
+      - "1025:1025"  # SMTP port
+      - "8025:8025"  # Web UI port
+    networks:
+      - onboarding-network
+
+volumes:
+  postgres_data:
+
+networks:
+  onboarding-network:
+    driver: bridge
