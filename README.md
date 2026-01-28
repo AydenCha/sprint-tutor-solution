@@ -112,7 +112,7 @@ sprint-tutor-flow/
 │   ├── public/
 │   └── README.md
 │
-├── scripts/                    # Dev utilities (e.g. extract_token.py, ralph/)
+├── scripts/                    # Dev utilities
 ├── start-all.sh
 ├── stop-all.sh
 ├── .env.example

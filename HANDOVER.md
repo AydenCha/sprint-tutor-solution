@@ -96,13 +96,12 @@ frontend/
     config/env.ts # VITE_API_URL 래핑
 
 scripts/
-  extract_token.py  # MailHog 이메일에서 토큰 추출 (로컬 PM 가입 테스트용)
-  ralph/            # 추가 자동화 스크립트
+  (dev utilities)
 ```
 
 ---
 
-## 5. 새 팀을 위한 “첫 1시간” 체크리스트
+## 5. 인계자 체크리스트
 
 1. **코드 열어보기**
    - `README.md`, `HANDOVER.md` 훑어보기

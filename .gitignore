@@ -10,6 +10,18 @@ start.log
 .env.local
 .env.*.local
 
+# Frontend env files (do not commit)
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+!frontend/.env.*.example
+
+# Backend env files (do not commit)
+backend/.env
+backend/.env.*
+!backend/.env.example
+!backend/.env.prod.example
+
 # IDE
 .idea/
 .vscode/
