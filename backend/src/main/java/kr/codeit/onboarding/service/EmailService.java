@@ -1,5 +1,6 @@
 package kr.codeit.onboarding.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,29 +11,46 @@ import org.springframework.stereotype.Service;
 /**
  * 이메일 발송 서비스
  * PM 회원가입 시 이메일 인증 링크 발송
- * 
- * Brevo API Key가 설정되어 있으면 BrevoEmailService 사용
- * 그렇지 않으면 기존 SMTP 방식 사용
+ *
+ * 우선순위: Resend API Key → Brevo API Key → SMTP(MailHog 등)
  */
 @Service
 @Slf4j
 public class EmailService {
 
     private final JavaMailSender mailSender;
+    private final ResendEmailService resendEmailService;
     private final BrevoEmailService brevoEmailService;
+    private final boolean useResendApi;
     private final boolean useBrevoApi;
 
     // JavaMailSender가 없을 수 있으므로 required = false로 설정
     @Autowired(required = false)
-    public EmailService(JavaMailSender mailSender, BrevoEmailService brevoEmailService,
+    public EmailService(JavaMailSender mailSender,
+                       ResendEmailService resendEmailService,
+                       BrevoEmailService brevoEmailService,
+                       @Value("${app.email.resend-api-key:}") String resendApiKey,
                        @Value("${app.email.brevo-api-key:}") String brevoApiKey,
                        @org.springframework.beans.factory.annotation.Qualifier("verificationBaseUrl") String verificationBaseUrl,
                        @org.springframework.beans.factory.annotation.Qualifier("passwordResetBaseUrl") String passwordResetBaseUrl) {
         this.mailSender = mailSender;
+        this.resendEmailService = resendEmailService;
         this.brevoEmailService = brevoEmailService;
+        this.useResendApi = resendApiKey != null && !resendApiKey.isEmpty();
         this.useBrevoApi = brevoApiKey != null && !brevoApiKey.isEmpty();
         this.verificationBaseUrl = verificationBaseUrl;
         this.passwordResetBaseUrl = passwordResetBaseUrl;
+    }
+
+    @PostConstruct
+    public void logEmailProvider() {
+        if (useResendApi) {
+            log.info("Email provider: Resend (RESEND_API_KEY is set)");
+        } else if (useBrevoApi) {
+            log.info("Email provider: Brevo (RESEND_API_KEY not set, BREVO_API_KEY is set)");
+        } else {
+            log.info("Email provider: SMTP (RESEND_API_KEY and BREVO_API_KEY not set)");
+        }
     }
 
     private final String verificationBaseUrl;
@@ -43,18 +61,22 @@ public class EmailService {
 
     /**
      * 이메일 인증 링크 발송
-     * Brevo API Key가 설정되어 있으면 REST API 사용, 그렇지 않으면 SMTP 사용
+     * Resend → Brevo → SMTP 순으로 사용
      * 개발 환경에서는 이메일 발송 실패 시에도 예외를 던지지 않음
      */
     public void sendVerificationEmail(String toEmail, String name, String token) {
-        // Brevo API Key가 설정되어 있으면 REST API 사용 (더 안정적)
+        if (useResendApi) {
+            log.debug("Resend API를 사용하여 이메일 발송: {}", toEmail);
+            resendEmailService.sendVerificationEmail(toEmail, name, token);
+            return;
+        }
         if (useBrevoApi) {
             log.debug("Brevo REST API를 사용하여 이메일 발송: {}", toEmail);
             brevoEmailService.sendVerificationEmail(toEmail, name, token);
             return;
         }
 
-        // 기존 SMTP 방식 (fallback)
+        // SMTP 방식 (fallback)
         if (mailSender == null) {
             log.warn("JavaMailSender가 설정되지 않았습니다. 이메일 발송을 건너뜁니다. (개발 환경)");
             log.info("인증 토큰: {} (개발용 - 직접 사용 가능)", token);
@@ -84,17 +106,21 @@ public class EmailService {
      * 비밀번호 재설정 링크 발송
      */
     public void sendPasswordResetEmail(String toEmail, String name, String token) {
-        log.info("비밀번호 재설정 이메일 발송 시도: {} (useBrevoApi: {}, mailSender: {})", 
-                toEmail, useBrevoApi, mailSender != null ? "설정됨" : "null");
-        
-        // Brevo API Key가 설정되어 있으면 REST API 사용
+        log.info("비밀번호 재설정 이메일 발송 시도: {} (useResend: {}, useBrevo: {}, mailSender: {})",
+                toEmail, useResendApi, useBrevoApi, mailSender != null ? "설정됨" : "null");
+
+        if (useResendApi) {
+            log.info("Resend API를 사용하여 비밀번호 재설정 이메일 발송: {}", toEmail);
+            resendEmailService.sendPasswordResetEmail(toEmail, name, token);
+            return;
+        }
         if (useBrevoApi) {
             log.info("Brevo REST API를 사용하여 비밀번호 재설정 이메일 발송: {}", toEmail);
             brevoEmailService.sendPasswordResetEmail(toEmail, name, token);
             return;
         }
 
-        // 기존 SMTP 방식 (fallback)
+        // SMTP 방식 (fallback)
         if (mailSender == null) {
             log.warn("JavaMailSender가 설정되지 않았습니다. 이메일 발송을 건너뜁니다. (개발 환경)");
             log.warn("로컬 개발 환경에서는 MailHog를 실행해야 합니다: docker-compose up -d mailhog");

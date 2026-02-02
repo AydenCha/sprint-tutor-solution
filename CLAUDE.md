@@ -132,7 +132,7 @@ Modules are reusable across instructors and steps. PMs can edit module content e
 ## Email System
 
 **Development**: MailHog (SMTP mock on port 1025, Web UI on port 8025)
-**Production**: Configurable SMTP or Brevo API
+**Production**: Resend API (우선) → Brevo API → SMTP
 
 Email use cases:
 - PM registration email verification
@@ -199,7 +199,7 @@ JWT_SECRET, JWT_EXPIRATION
 UPLOAD_DIR
 AWS_S3_BUCKET_NAME, AWS_S3_REGION, AWS_S3_ACCESS_KEY, AWS_S3_SECRET_KEY (optional)
 MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD
-BREVO_API_KEY (optional)
+RESEND_API_KEY (optional, 우선 사용), BREVO_API_KEY (optional)
 CORS_ALLOWED_ORIGINS
 EMAIL_VERIFICATION_URL, EMAIL_PASSWORD_RESET_URL
 ```
@@ -224,7 +224,7 @@ VITE_API_URL - Backend API URL (default: http://localhost:8080/api)
 - Set up S3 for video storage (optional)
 - Enable HTTPS/SSL
 - Configure CORS for production frontend URL
-- Set email service (SMTP or Brevo)
+- Set email service (Resend, Brevo, or SMTP)
 
 ## Common Debugging
 

@@ -99,7 +99,8 @@ app:
     from: ${EMAIL_FROM:${EMAIL_DOMAIN:noreply@codeit.com}}
     from-name: ${EMAIL_FROM_NAME:코드잇}
     domain: ${EMAIL_DOMAIN:@codeit.com}  # Allowed email domain for registration
-    brevo-api-key: ${BREVO_API_KEY:}  # Brevo REST API Key (설정 시 REST API 사용, 미설정 시 SMTP 사용)
+    resend-api-key: ${RESEND_API_KEY:}   # Resend API Key (우선 사용)
+    brevo-api-key: ${BREVO_API_KEY:}     # Brevo REST API Key (Resend 미설정 시 사용)
     brevo-api-url: ${BREVO_API_URL:https://api.brevo.com/v3/smtp/email}  # Brevo API endpoint
     # Email URLs are automatically constructed by EmailUrlConfig Bean:
     # 1. If EMAIL_VERIFICATION_URL/EMAIL_PASSWORD_RESET_URL are set, use them directly
