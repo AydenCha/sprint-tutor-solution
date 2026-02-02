@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service;
 public class ResendEmailService {
 
     private final Resend resend;
-    private final String fromEmail;
+    /** Resend 발신 주소 (도메인 미인증 시 onboarding@resend.dev 사용) */
+    private final String resendFrom;
     private final String fromName;
     private final String verificationBaseUrl;
     private final String passwordResetBaseUrl;
@@ -25,13 +26,13 @@ public class ResendEmailService {
 
     public ResendEmailService(
             @Value("${app.email.resend-api-key:}") String apiKey,
-            @Value("${app.email.from:noreply@codeit.com}") String fromEmail,
+            @Value("${app.email.resend-from:onboarding@resend.dev}") String resendFrom,
             @Value("${app.email.from-name:코드잇}") String fromName,
             @org.springframework.beans.factory.annotation.Qualifier("verificationBaseUrl") String verificationBaseUrl,
             @org.springframework.beans.factory.annotation.Qualifier("passwordResetBaseUrl") String passwordResetBaseUrl) {
         this.apiKeyConfigured = apiKey != null && !apiKey.isEmpty();
         this.resend = this.apiKeyConfigured ? new Resend(apiKey) : null;
-        this.fromEmail = fromEmail;
+        this.resendFrom = resendFrom != null && !resendFrom.isEmpty() ? resendFrom : "onboarding@resend.dev";
         this.fromName = fromName;
         this.verificationBaseUrl = verificationBaseUrl;
         this.passwordResetBaseUrl = passwordResetBaseUrl;
@@ -56,8 +57,8 @@ public class ResendEmailService {
             String htmlContent = buildVerificationEmailContent(name, verificationUrl);
 
             String from = fromName != null && !fromName.isEmpty()
-                    ? fromName + " <" + fromEmail + ">"
-                    : fromEmail;
+                    ? fromName + " <" + resendFrom + ">"
+                    : resendFrom;
 
             SendEmailRequest request = SendEmailRequest.builder()
                     .from(from)
@@ -96,8 +97,8 @@ public class ResendEmailService {
             String htmlContent = buildPasswordResetEmailContent(name, resetUrl);
 
             String from = fromName != null && !fromName.isEmpty()
-                    ? fromName + " <" + fromEmail + ">"
-                    : fromEmail;
+                    ? fromName + " <" + resendFrom + ">"
+                    : resendFrom;
 
             SendEmailRequest request = SendEmailRequest.builder()
                     .from(from)
