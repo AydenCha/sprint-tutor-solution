@@ -118,11 +118,29 @@ public class VideoUploadService {
         }
 
         // Check if it's an S3 URL
-        if (s3Service.isEnabled() && storedFileNameOrUrl.startsWith("http")) {
+        if (storedFileNameOrUrl.startsWith("http")) {
+            if (!s3Service.isEnabled()) {
+                log.warn("S3 is disabled, skipping deletion for URL: {}", storedFileNameOrUrl);
+                return;
+            }
+
             try {
                 // Extract S3 key from URL
                 // URL format: https://bucket.s3.region.amazonaws.com/videos/filename
-                String s3Key = storedFileNameOrUrl.substring(storedFileNameOrUrl.indexOf("/videos/"));
+                java.net.URI uri = java.net.URI.create(storedFileNameOrUrl);
+                String path = uri.getPath();
+                if (path == null) {
+                    log.warn("S3 URL missing path, skipping deletion: {}", storedFileNameOrUrl);
+                    return;
+                }
+
+                int videosIndex = path.indexOf("/videos/");
+                if (videosIndex < 0) {
+                    log.warn("S3 URL missing videos path, skipping deletion: {}", storedFileNameOrUrl);
+                    return;
+                }
+
+                String s3Key = path.substring(videosIndex + 1);
                 s3Service.deleteFile(s3Key);
                 log.info("Video deleted from S3: {}", s3Key);
             } catch (Exception e) {
@@ -147,6 +165,9 @@ public class VideoUploadService {
      * @return File path for local storage, or null for S3 (use URL directly)
      */
     public Path getVideoPath(String storedFileNameOrUrl) {
+        if (storedFileNameOrUrl == null || storedFileNameOrUrl.isBlank()) {
+            return null;
+        }
         // If it's an S3 URL, return null (video should be accessed via URL)
         if (s3Service.isEnabled() && storedFileNameOrUrl != null && storedFileNameOrUrl.startsWith("http")) {
             return null;
